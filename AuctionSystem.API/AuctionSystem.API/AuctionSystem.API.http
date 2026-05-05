@@ -16,3 +16,19 @@ Content-Type: application/json
   "email": "seller@test.com",
   "password": "123456"
 }
+
+###
+
+POST https://localhost:7262/api/devicephotos/detect
+Content-Type: multipart/form-data; boundary=boundary
+
+--boundary
+Content-Disposition: form-data; name="UserId"
+
+1
+--boundary
+Content-Disposition: form-data; name="Photo"; filename="laptop.png"
+Content-Type: image/png
+
+< C:\Temp\laptop.png
+--boundary--

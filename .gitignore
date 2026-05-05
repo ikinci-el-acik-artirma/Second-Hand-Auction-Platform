@@ -3,3 +3,5 @@
 ################################################################################
 
 /.vs/slnx.sqlite
+/AuctionSystem.API/AuctionSystem.API/wwwroot/uploads
+/.vs/VSWorkspaceState.json
