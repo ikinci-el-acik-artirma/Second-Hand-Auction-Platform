@@ -11,6 +11,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddScoped<AuthService>();
 
+builder.Services.AddHttpClient<DevicePhotoService>();
+
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
@@ -21,6 +23,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseStaticFiles();
 
 app.UseAuthorization();
 
