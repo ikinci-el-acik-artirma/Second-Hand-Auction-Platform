@@ -30,6 +30,7 @@ namespace AuctionSystem.Tests
             {
                 Title = "  Used laptop  ",
                 Description = "  Laptop in working condition.  ",
+                Category = "  Laptop  ",
                 StartingPrice = 5000,
                 AuctionEndDate = auctionEndDate,
                 SellerId = seller.Id
@@ -38,10 +39,72 @@ namespace AuctionSystem.Tests
             Assert.NotNull(result);
             Assert.Equal("Used laptop", result.Title);
             Assert.Equal("Laptop in working condition.", result.Description);
+            Assert.Equal("Laptop", result.Category);
             Assert.Equal(5000, result.StartingPrice);
             Assert.Equal(auctionEndDate, result.AuctionEndDate);
             Assert.Equal(seller.Id, result.SellerId);
             Assert.Single(context.AuctionItems);
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData("   ")]
+        public async Task CreateAsync_WithInvalidCategory_ShouldReturnNull(string? category)
+        {
+            using var context = CreateDbContext();
+            var seller = await AddUserAsync(context, "seller@test.com", "Seller");
+            var service = new AuctionItemService(context);
+            var request = CreateValidRequest(seller.Id);
+            request.Category = category!;
+
+            var result = await service.CreateAsync(request);
+
+            Assert.Null(result);
+            Assert.Empty(context.AuctionItems);
+        }
+
+        [Fact]
+        public async Task GetAsync_WithCategory_ShouldReturnMatchingItemsIgnoringCase()
+        {
+            using var context = CreateDbContext();
+            var seller = await AddUserAsync(context, "seller@test.com", "Seller");
+            var service = new AuctionItemService(context);
+            var phoneRequest = CreateValidRequest(seller.Id);
+            var laptopRequest = CreateValidRequest(seller.Id);
+            phoneRequest.Category = "Phone";
+            laptopRequest.Category = "Laptop";
+
+            await service.CreateAsync(phoneRequest);
+            await service.CreateAsync(laptopRequest);
+
+            var result = await service.GetAsync(" phone ");
+
+            Assert.Single(result);
+            Assert.Equal("Phone", result[0].Category);
+        }
+
+        [Fact]
+        public async Task GetAsync_WithoutCategory_ShouldReturnAllItemsOrderedByEndDate()
+        {
+            using var context = CreateDbContext();
+            var seller = await AddUserAsync(context, "seller@test.com", "Seller");
+            var service = new AuctionItemService(context);
+            var laterRequest = CreateValidRequest(seller.Id);
+            var earlierRequest = CreateValidRequest(seller.Id);
+            laterRequest.Title = "Later auction";
+            laterRequest.AuctionEndDate = DateTime.UtcNow.AddDays(5);
+            earlierRequest.Title = "Earlier auction";
+            earlierRequest.AuctionEndDate = DateTime.UtcNow.AddDays(1);
+
+            await service.CreateAsync(laterRequest);
+            await service.CreateAsync(earlierRequest);
+
+            var result = await service.GetAsync();
+
+            Assert.Equal(2, result.Count);
+            Assert.Equal("Earlier auction", result[0].Title);
+            Assert.Equal("Later auction", result[1].Title);
         }
 
         [Fact]
@@ -122,6 +185,7 @@ namespace AuctionSystem.Tests
             {
                 Title = "Used phone",
                 Description = "Phone with minor scratches.",
+                Category = "Phone",
                 StartingPrice = 2500,
                 AuctionEndDate = DateTime.UtcNow.AddDays(2),
                 SellerId = sellerId
