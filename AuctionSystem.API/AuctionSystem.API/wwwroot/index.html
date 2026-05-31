@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İkinci El Açık Artırma</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <header class="site-header">
+        <div>
+            <p class="eyebrow">Second-Hand Auction Platform</p>
+            <h1>İkinci El Elektronik Pazarı</h1>
+        </div>
+        <div id="sessionStatus" class="session-status">Henüz giriş yapılmadı</div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div>
+                <p class="eyebrow">MVP Demo</p>
+                <h2>Elektronik ürünleri keşfet, ayrıntıları incele.</h2>
+                <p>Kategoriye göre filtrele, ilanları görüntüle ve hesap işlemlerini bu basit arayüzden tamamla.</p>
+            </div>
+        </section>
+
+        <section class="auth-grid" aria-label="Hesap işlemleri">
+            <form id="registerForm" class="panel">
+                <h2>Kayıt Ol</h2>
+                <label>
+                    E-posta
+                    <input name="email" type="email" required autocomplete="email">
+                </label>
+                <label>
+                    Şifre
+                    <input name="password" type="password" required autocomplete="new-password">
+                </label>
+                <label>
+                    Rol
+                    <select name="role">
+                        <option value="Buyer">Alıcı</option>
+                        <option value="Seller">Satıcı</option>
+                    </select>
+                </label>
+                <button type="submit">Kayıt Ol</button>
+            </form>
+
+            <form id="loginForm" class="panel">
+                <h2>Giriş Yap</h2>
+                <label>
+                    E-posta
+                    <input name="email" type="email" required autocomplete="email">
+                </label>
+                <label>
+                    Şifre
+                    <input name="password" type="password" required autocomplete="current-password">
+                </label>
+                <button type="submit">Giriş Yap</button>
+            </form>
+        </section>
+
+        <section class="listing-section">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">Aktif İlanlar</p>
+                    <h2>Açık artırmaları incele</h2>
+                </div>
+                <form id="filterForm" class="filter-form">
+                    <label>
+                        Kategori
+                        <input name="category" type="search" placeholder="Örn. Phone">
+                    </label>
+                    <button type="submit">Filtrele</button>
+                    <button id="clearFilterButton" class="button-secondary" type="button">Temizle</button>
+                </form>
+            </div>
+
+            <p id="listingMessage" class="message" aria-live="polite"></p>
+            <div id="listingGrid" class="listing-grid"></div>
+        </section>
+    </main>
+
+    <dialog id="detailDialog">
+        <button id="closeDetailButton" class="dialog-close" type="button" aria-label="Kapat">×</button>
+        <p class="eyebrow">Ürün Detayı</p>
+        <h2 id="detailTitle"></h2>
+        <dl class="detail-list">
+            <div>
+                <dt>Kategori</dt>
+                <dd id="detailCategory"></dd>
+            </div>
+            <div>
+                <dt>Başlangıç fiyatı</dt>
+                <dd id="detailPrice"></dd>
+            </div>
+            <div>
+                <dt>Bitiş zamanı</dt>
+                <dd id="detailEndDate"></dd>
+            </div>
+            <div>
+                <dt>Açıklama</dt>
+                <dd id="detailDescription"></dd>
+            </div>
+        </dl>
+    </dialog>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <script src="/app.js"></script>
+</body>
+</html>
