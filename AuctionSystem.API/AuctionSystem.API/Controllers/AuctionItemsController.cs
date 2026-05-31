@@ -15,6 +15,12 @@ namespace AuctionSystem.API.Controllers
             _auctionItemService = auctionItemService;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Get([FromQuery] string? category)
+        {
+            return Ok(await _auctionItemService.GetAsync(category));
+        }
+
         [HttpPost]
         public async Task<IActionResult> Create(CreateAuctionItemRequest request)
         {
