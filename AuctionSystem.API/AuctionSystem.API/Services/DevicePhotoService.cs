@@ -5,6 +5,7 @@ using AuctionSystem.API.Data;
 using AuctionSystem.API.DTOs.DevicePhoto;
 using AuctionSystem.API.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 
 namespace AuctionSystem.API.Services
 {
@@ -53,6 +54,27 @@ namespace AuctionSystem.API.Services
                 PhotoUrl = devicePhoto.PhotoUrl,
                 DetectedDeviceType = devicePhoto.DetectedDeviceType,
                 UserId = devicePhoto.UserId
+            };
+        }
+
+        public async Task<DevicePhotoReportResponse?> GetReportAsync(int id)
+        {
+            var devicePhoto = await _context.DevicePhotos
+                .AsNoTracking()
+                .FirstOrDefaultAsync(photo => photo.Id == id);
+
+            if (devicePhoto == null)
+            {
+                return null;
+            }
+
+            return new DevicePhotoReportResponse
+            {
+                Id = devicePhoto.Id,
+                PhotoUrl = devicePhoto.PhotoUrl,
+                DetectedDeviceType = devicePhoto.DetectedDeviceType,
+                UserId = devicePhoto.UserId,
+                Message = "AI device type report created successfully."
             };
         }
 

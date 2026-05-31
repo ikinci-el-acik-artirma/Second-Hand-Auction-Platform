@@ -80,3 +80,7 @@ Content-Type: image/png
 
 < C:\Temp\laptop.png
 --boundary--
+
+###
+
+GET https://localhost:7262/api/devicephotos/1/report
