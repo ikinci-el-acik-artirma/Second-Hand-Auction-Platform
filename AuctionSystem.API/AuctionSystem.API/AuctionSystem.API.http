@@ -19,6 +19,19 @@ Content-Type: application/json
 
 ###
 
+POST https://localhost:7262/api/auctionitems
+Content-Type: application/json
+
+{
+  "title": "Used laptop",
+  "description": "Laptop in working condition.",
+  "startingPrice": 5000,
+  "auctionEndDate": "2026-06-07T18:00:00Z",
+  "sellerId": 1
+}
+
+###
+
 POST https://localhost:7262/api/devicephotos/detect
 Content-Type: multipart/form-data; boundary=boundary
 
