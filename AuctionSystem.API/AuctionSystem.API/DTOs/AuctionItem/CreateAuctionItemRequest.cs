@@ -6,8 +6,6 @@ namespace AuctionSystem.API.DTOs.AuctionItem
 
         public string Description { get; set; } = string.Empty;
 
-        public string Category { get; set; } = string.Empty;
-
         public decimal StartingPrice { get; set; }
 
         public DateTime AuctionEndDate { get; set; }

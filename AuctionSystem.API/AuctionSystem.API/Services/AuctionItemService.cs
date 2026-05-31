@@ -16,13 +16,11 @@ namespace AuctionSystem.API.Services
 
         public async Task<AuctionItemResponse?> CreateAsync(CreateAuctionItemRequest request)
         {
-            var title = request.Title?.Trim() ?? string.Empty;
-            var description = request.Description?.Trim() ?? string.Empty;
-            var category = request.Category?.Trim() ?? string.Empty;
+            var title = request.Title.Trim();
+            var description = request.Description.Trim();
 
             if (string.IsNullOrWhiteSpace(title) ||
                 string.IsNullOrWhiteSpace(description) ||
-                string.IsNullOrWhiteSpace(category) ||
                 request.StartingPrice <= 0 ||
                 request.AuctionEndDate <= DateTime.UtcNow)
             {
@@ -42,7 +40,6 @@ namespace AuctionSystem.API.Services
             {
                 Title = title,
                 Description = description,
-                Category = category,
                 StartingPrice = request.StartingPrice,
                 AuctionEndDate = request.AuctionEndDate,
                 SellerId = request.SellerId
@@ -56,36 +53,10 @@ namespace AuctionSystem.API.Services
                 Id = auctionItem.Id,
                 Title = auctionItem.Title,
                 Description = auctionItem.Description,
-                Category = auctionItem.Category,
                 StartingPrice = auctionItem.StartingPrice,
                 AuctionEndDate = auctionItem.AuctionEndDate,
                 SellerId = auctionItem.SellerId
             };
-        }
-
-        public async Task<List<AuctionItemResponse>> GetAsync(string? category = null)
-        {
-            var query = _context.AuctionItems.AsNoTracking();
-            var normalizedCategory = category?.Trim().ToLower();
-
-            if (!string.IsNullOrWhiteSpace(normalizedCategory))
-            {
-                query = query.Where(item => item.Category.ToLower() == normalizedCategory);
-            }
-
-            return await query
-                .OrderBy(item => item.AuctionEndDate)
-                .Select(item => new AuctionItemResponse
-                {
-                    Id = item.Id,
-                    Title = item.Title,
-                    Description = item.Description,
-                    Category = item.Category,
-                    StartingPrice = item.StartingPrice,
-                    AuctionEndDate = item.AuctionEndDate,
-                    SellerId = item.SellerId
-                })
-                .ToListAsync();
         }
     }
 }
