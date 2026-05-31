@@ -11,6 +11,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddScoped<AuthService>();
 
+builder.Services.AddScoped<AuctionItemService>();
+
 builder.Services.AddHttpClient<DevicePhotoService>();
 
 builder.Services.AddOpenApi();
