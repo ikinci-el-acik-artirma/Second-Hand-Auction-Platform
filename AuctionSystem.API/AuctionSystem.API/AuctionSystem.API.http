@@ -55,10 +55,15 @@ Content-Type: application/json
 {
   "title": "Used laptop",
   "description": "Laptop in working condition.",
+  "category": "Laptop",
   "startingPrice": 5000,
   "auctionEndDate": "2026-06-07T18:00:00Z",
   "sellerId": 1
 }
+
+###
+
+GET https://localhost:7262/api/auctionitems?category=Laptop
 
 ###
 
