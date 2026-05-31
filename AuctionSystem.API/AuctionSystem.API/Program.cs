@@ -13,6 +13,8 @@ builder.Services.AddScoped<AuthService>();
 
 builder.Services.AddScoped<AuctionItemService>();
 
+builder.Services.AddScoped<BidService>();
+
 builder.Services.AddHttpClient<DevicePhotoService>();
 
 builder.Services.AddOpenApi();
