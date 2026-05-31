@@ -90,6 +90,74 @@ namespace AuctionSystem.API.Services
                 Message = "Login successful."
             };
         }
+
+        public async Task<ForgotPasswordResponse?> ForgotPasswordAsync(ForgotPasswordRequest request)
+        {
+            var email = request.Email.Trim().ToLower();
+
+            if (string.IsNullOrWhiteSpace(email))
+            {
+                return null;
+            }
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+
+            if (user == null)
+            {
+                return null;
+            }
+
+            var resetToken = Guid.NewGuid().ToString();
+
+            user.PasswordResetToken = resetToken;
+            user.PasswordResetTokenExpiresAt = DateTime.UtcNow.AddMinutes(30);
+
+            await _context.SaveChangesAsync();
+
+            return new ForgotPasswordResponse
+            {
+                Email = user.Email,
+                ResetToken = resetToken,
+                Message = "Password reset token created successfully."
+            };
+        }
+
+        public async Task<bool> ResetPasswordAsync(ResetPasswordRequest request)
+        {
+            var email = request.Email.Trim().ToLower();
+
+            if (string.IsNullOrWhiteSpace(email) ||
+                string.IsNullOrWhiteSpace(request.ResetToken) ||
+                string.IsNullOrWhiteSpace(request.NewPassword))
+            {
+                return false;
+            }
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+
+            if (user == null)
+            {
+                return false;
+            }
+
+            if (user.PasswordResetToken != request.ResetToken)
+            {
+                return false;
+            }
+
+            if (user.PasswordResetTokenExpiresAt == null ||
+                user.PasswordResetTokenExpiresAt < DateTime.UtcNow)
+            {
+                return false;
+            }
+
+            user.PasswordHash = _passwordHasher.HashPassword(user, request.NewPassword);
+            user.PasswordResetToken = null;
+            user.PasswordResetTokenExpiresAt = null;
+
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
     }
 }
-

@@ -122,6 +122,90 @@ namespace AuctionSystem.Tests
             Assert.Null(result);
             Assert.Empty(context.Users);
         }
+
+        [Fact]
+        public async Task ForgotPasswordAsync_WithRegisteredEmail_ShouldCreateResetToken()
+        {
+            using var context = CreateDbContext();
+            var service = new AuthService(context);
+
+            await service.RegisterAsync(new RegisterRequest
+            {
+                Email = "reset@test.com",
+                Password = "123456",
+                Role = "Buyer"
+            });
+
+            var result = await service.ForgotPasswordAsync(new ForgotPasswordRequest
+            {
+                Email = "reset@test.com"
+            });
+
+            var user = await context.Users.FirstAsync(u => u.Email == "reset@test.com");
+
+            Assert.NotNull(result);
+            Assert.Equal("reset@test.com", result.Email);
+            Assert.False(string.IsNullOrWhiteSpace(result.ResetToken));
+            Assert.Equal("Password reset token created successfully.", result.Message);
+            Assert.False(string.IsNullOrWhiteSpace(user.PasswordResetToken));
+            Assert.NotNull(user.PasswordResetTokenExpiresAt);
+        }
+
+        [Fact]
+        public async Task ForgotPasswordAsync_WithUnknownEmail_ShouldReturnNull()
+        {
+            using var context = CreateDbContext();
+            var service = new AuthService(context);
+
+            var result = await service.ForgotPasswordAsync(new ForgotPasswordRequest
+            {
+                Email = "unknown@test.com"
+            });
+
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public async Task ResetPasswordAsync_WithValidToken_ShouldChangePassword()
+        {
+            using var context = CreateDbContext();
+            var service = new AuthService(context);
+
+            await service.RegisterAsync(new RegisterRequest
+            {
+                Email = "reset@test.com",
+                Password = "123456",
+                Role = "Buyer"
+            });
+
+            var forgotPasswordResult = await service.ForgotPasswordAsync(new ForgotPasswordRequest
+            {
+                Email = "reset@test.com"
+            });
+
+            var resetResult = await service.ResetPasswordAsync(new ResetPasswordRequest
+            {
+                Email = "reset@test.com",
+                ResetToken = forgotPasswordResult!.ResetToken,
+                NewPassword = "654321"
+            });
+
+            var oldPasswordLogin = await service.LoginAsync(new LoginRequest
+            {
+                Email = "reset@test.com",
+                Password = "123456"
+            });
+
+            var newPasswordLogin = await service.LoginAsync(new LoginRequest
+            {
+                Email = "reset@test.com",
+                Password = "654321"
+            });
+
+            Assert.True(resetResult);
+            Assert.Null(oldPasswordLogin);
+            Assert.NotNull(newPasswordLogin);
+            Assert.Equal("Login successful.", newPasswordLogin.Message);
+        }
     }
 }
-
