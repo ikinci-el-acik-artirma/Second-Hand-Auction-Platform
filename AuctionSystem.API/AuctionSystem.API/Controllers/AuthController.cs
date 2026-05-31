@@ -40,6 +40,31 @@ namespace AuctionSystem.API.Controllers
 
             return Ok(result);
         }
+
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordRequest request)
+        {
+            var result = await _authService.ForgotPasswordAsync(request);
+
+            if (result == null)
+            {
+                return BadRequest("Password reset request failed.");
+            }
+
+            return Ok(result);
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword(ResetPasswordRequest request)
+        {
+            var result = await _authService.ResetPasswordAsync(request);
+
+            if (!result)
+            {
+                return BadRequest("Password reset failed.");
+            }
+
+            return Ok("Password reset successful.");
+        }
     }
 }
-

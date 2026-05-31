@@ -19,6 +19,36 @@ Content-Type: application/json
 
 ###
 
+POST https://localhost:7262/api/auth/forgot-password
+Content-Type: application/json
+
+{
+  "email": "seller@test.com"
+}
+
+###
+
+POST https://localhost:7262/api/auth/reset-password
+Content-Type: application/json
+
+{
+  "email": "seller@test.com",
+  "resetToken": "BURAYA_FORGOT_PASSWORD_CEVABINDAKI_TOKEN_GELECEK",
+  "newPassword": "654321"
+}
+
+###
+
+POST https://localhost:7262/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "seller@test.com",
+  "password": "654321"
+}
+
+###
+
 POST https://localhost:7262/api/auctionitems
 Content-Type: application/json
 
