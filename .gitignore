@@ -1,0 +1,7 @@
+﻿################################################################################
+# Bu .gitignore dosyası Microsoft(R) Visual Studio tarafından otomatik olarak oluşturulmuştur.
+################################################################################
+
+/.vs/slnx.sqlite
+/AuctionSystem.API/AuctionSystem.API/wwwroot/uploads
+/.vs/VSWorkspaceState.json
