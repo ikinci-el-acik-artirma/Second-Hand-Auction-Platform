@@ -22,7 +22,20 @@ namespace AuctionSystem.API.Controllers
 
             if (result == null)
             {
-                return BadRequest("Photo upload failed. Please upload a valid image file.");
+                return BadRequest("Photo upload failed.");
+            }
+
+            return Ok(result);
+        }
+
+        [HttpGet("{id}/report")]
+        public async Task<IActionResult> GetReport(int id)
+        {
+            var result = await _devicePhotoService.GetReportAsync(id);
+
+            if (result == null)
+            {
+                return NotFound("AI device type report not found.");
             }
 
             return Ok(result);
