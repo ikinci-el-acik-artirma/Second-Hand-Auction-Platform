@@ -15,5 +15,7 @@ namespace AuctionSystem.API.Data
         public DbSet<DevicePhoto> DevicePhotos => Set<DevicePhoto>();
 
         public DbSet<AuctionItem> AuctionItems => Set<AuctionItem>();
+
+        public DbSet<Bid> Bids => Set<Bid>();
     }
 }

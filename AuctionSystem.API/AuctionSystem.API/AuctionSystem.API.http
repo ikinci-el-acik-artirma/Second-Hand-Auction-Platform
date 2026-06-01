@@ -67,6 +67,20 @@ GET https://localhost:7262/api/auctionitems?category=Laptop
 
 ###
 
+POST https://localhost:7262/api/auctionitems/1/bids
+Content-Type: application/json
+
+{
+  "buyerId": 2,
+  "amount": 5500
+}
+
+###
+
+GET https://localhost:7262/api/auctionitems/1/bids
+
+###
+
 POST https://localhost:7262/api/devicephotos/detect
 Content-Type: multipart/form-data; boundary=boundary
 
